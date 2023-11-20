@@ -14,8 +14,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
@@ -110,7 +112,26 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
-        // TODO: Handle Google Sign-In result
+        try {
+            val account = task.getResult(ApiException::class.java)
+            if (account != null) {
+                firebaseAuthWithGoogle(account)
+            }
+        } catch (e: ApiException) {
+            Toast.makeText(this, "Google sign-in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    startHomeScreenActivity()
+                } else {
+                    Toast.makeText(this, "Firebase Authentication failed", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun startHomeScreenActivity() {
