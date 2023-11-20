@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Bloodly</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_main_screen">MainScreenActivity</string>
+    <string name="title_activity_forgot_password_email">ForgotPasswordEmailActivity</string>
+    <string name="title_activity_forgot_password_verification">ForgotPasswordVerificationActivity
+    </string>
+    <string name="title_activity_user_info">UserInfoActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_home_screen">HomeScreenActivity</string>
+</resources>
