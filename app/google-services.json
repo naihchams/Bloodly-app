@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "409357161453",
+    "project_id": "bloodly-b14bc",
+    "storage_bucket": "bloodly-b14bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409357161453:android:8f9d56f1ea7c24e5b08de4",
+        "android_client_info": {
+          "package_name": "com.example.bloodly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409357161453-etms02sq6btns94sbokljnhoqbep4grg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bloodly",
+            "certificate_hash": "1b05fa03884a2d06ec79553c2448bc7caa505fc1"
+          }
+        },
+        {
+          "client_id": "409357161453-0araod7leuqn9r2hppkeot2i1ric6tsi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJFL74Dd_3RTUHJ7PIQGxMhPQN04odxqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409357161453-0araod7leuqn9r2hppkeot2i1ric6tsi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
