@@ -124,6 +124,7 @@
             android:scaleType="centerInside" />
 
             <ImageButton
+                android:id="@+id/icon2"
                 android:layout_width="60dp"
                 android:layout_height="44dp"
                 android:background="@drawable/rounded_button_bg"
