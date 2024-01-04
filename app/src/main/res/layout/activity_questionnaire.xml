@@ -1,50 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_image">
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Complete Your Profile"
-        android:textSize="30sp"
-        android:textColor="#BB1F1F"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
-
-    <TextView
-        android:id="@+id/descriptionTextView"
-        android:layout_width="294dp"
-        android:layout_height="74dp"
-        android:layout_below="@id/titleTextView"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="6dp"
-        android:text="To ensure safe donations and find the best matches, we need some essential details from you. Your accuracy can make a life-changing difference. Let's begin!"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        />
-
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/descriptionTextView"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"/>
-
+    android:background="@drawable/background_image"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/progressIndicatorContainer"
-        android:layout_width="wrap_content"
+        android:id="@+id/questionLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/fragmentContainer"
-        android:layout_marginTop="20dp">
+        android:orientation="vertical"
+        android:padding="16dp" />
 
-        <!-- Dynamically added progress indicator views will go here -->
-    </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>

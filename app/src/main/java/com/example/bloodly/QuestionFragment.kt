@@ -1,4 +1,4 @@
-package com.example.bloodly
+/*package com.example.bloodly
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -53,3 +53,4 @@ class QuestionFragment : Fragment() {
         }
     }
 }
+*/
