@@ -24,6 +24,10 @@ private var mDatabase: FirebaseFirestore? = null
 
 class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
 
+    private var isClearingCheck: Boolean = false
+
+    var radioGroups: RadioGroup? = null
+    var radioGroups2: RadioGroup? = null
     var edit_name: EditText?=null
     var edit_age: EditText?=null
     var edit_phone: EditText?=null
@@ -40,8 +44,6 @@ class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
     var userId:String?=null
     var userEmail:String?=null
 
-    //database for Request
-    private var mDatabaseRequest: DatabaseReference? = null
 
     override fun onStart() {
         super.onStart()
@@ -71,10 +73,11 @@ class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
         edit_hospital=view.findViewById<EditText>(R.id.edit_hospital)
         edit_userLocation=view.findViewById<EditText>(R.id.edit_userLocation)
 
-        val radioGroups = view.findViewById<RadioGroup>(R.id.radio_group)
-        radioGroups.setOnCheckedChangeListener(this)
-        val radioGroups2 = view.findViewById<RadioGroup>(R.id.radio_group2)
-        radioGroups2.setOnCheckedChangeListener(this)
+        radioGroups = view.findViewById(R.id.radio_group) as RadioGroup
+        radioGroups?.setOnCheckedChangeListener(this)
+
+        radioGroups2 = view.findViewById(R.id.radio_group2) as RadioGroup
+        radioGroups2?.setOnCheckedChangeListener(this)
 
         val publishBtn =view.findViewById<Button>(R.id.publish)
 
@@ -125,10 +128,9 @@ class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
             Toast.makeText(context,"Select how many unitNeeded?",Toast.LENGTH_SHORT).show()
         }
         else if(bloodGrp==null){
-            Toast.makeText(context,"Select how many unitNeeded?",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,"Select blood group",Toast.LENGTH_SHORT).show()
         }
         else{
-            //Todo send request to firebase
             sendRequestFirebase()
         }
 
@@ -141,7 +143,7 @@ class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
         // Add a new document with a generated ID
         mDatabase?.collection("Request")?.add(requestModel)
             ?.addOnSuccessListener { documentReference ->
-                Toast.makeText(context, "Request Submitted with ID: ${documentReference.id}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Request Submitted", Toast.LENGTH_SHORT).show()
                 navigateToHome()
             }
             ?.addOnFailureListener { e ->
@@ -159,12 +161,34 @@ class AddRequestActivity : Fragment(), RadioGroup.OnCheckedChangeListener {
         fun newInstance(): AddRequestActivity = AddRequestActivity()
     }
 
-    override fun onCheckedChanged(group: RadioGroup?, p1: Int) {
-        val checkedRadioButton = group?.findViewById(group.checkedRadioButtonId) as? RadioButton
-        checkedRadioButton?.let {
-            if (checkedRadioButton.isChecked){
-                bloodGrp=checkedRadioButton?.text.toString()
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+
+        if (isClearingCheck) {
+            return; // Prevent further processing if we are just clearing checks
+        }
+
+        val localRadioGroups = radioGroups
+        val localRadioGroups2 = radioGroups2
+
+        try {
+            isClearingCheck = true;
+            if (group === localRadioGroups) {
+                localRadioGroups2?.clearCheck();
+            } else if (group === localRadioGroups2) {
+                localRadioGroups?.clearCheck();
+            }
+        } finally {
+            isClearingCheck = false;
+        }
+
+        if (checkedId != -1) {
+            val checkedRadioButton = group?.findViewById<RadioButton>(checkedId)
+            checkedRadioButton?.let {
+                if (it.isChecked) {
+                    bloodGrp = it.text.toString()
+                }
             }
         }
     }
+
 }

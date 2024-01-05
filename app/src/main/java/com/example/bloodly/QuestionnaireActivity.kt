@@ -161,12 +161,21 @@ class QuestionnaireActivity : AppCompatActivity() {
     }
 
     private fun userAnswersToMap(userName: String): Map<String, Any> {
-        val answersMap = mutableMapOf("userName" to userName)
-        questions.mapIndexed { index, question ->
-            answersMap[question.text] = userAnswers[index]
+        // Since we already have the userName, we'll start adding questions and answers from the second question
+        val answersMap = mutableMapOf<String, Any>()
+
+        // Skip the first entry (userName) when creating the map
+        questions.zip(userAnswers.drop(1)).forEach { (question, answer) ->
+            answersMap[question.text] = answer
         }
+
+        // Now, add the userName entry
+        answersMap["userName"] = userName
+
         return answersMap
     }
+
+
 
     private fun navigateToHomeScreen() {
         val intent = Intent(this, MainScreenActivity::class.java)

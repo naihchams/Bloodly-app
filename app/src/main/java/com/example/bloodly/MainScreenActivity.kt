@@ -40,7 +40,7 @@ class MainScreenActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_request -> {
-                toolbar.title = "All Request"
+                toolbar.title = "All Requests"
                 val rquestFragment = AllRequestsActivity.newInstance()
                 openFragment(rquestFragment)
                 return@OnNavigationItemSelectedListener true

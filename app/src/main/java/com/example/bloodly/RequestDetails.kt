@@ -47,15 +47,15 @@ class RequestDetails : AppCompatActivity(), PermissionListener {
         val btn_call: Button = findViewById(R.id.btn_call)
 
 
-        txt_name.text="Name :"+requestModel.userName
-        txt_BloodGrp.text="Blood Group :"+requestModel.userBloodGrp
-        txt_address.text="Address :"+requestModel.userLocation
-        txt_hospital.text="Request From :"+requestModel.hospital
-        txt_location.text="Location Of Hospital :"+requestModel.userLocation
-        txt_neededBloodGrp.text="Needed BloodGroup :"+requestModel.userBloodGrp
-        txt_neededUnit.text="Needed No of Unit :"+requestModel.unitNeeded
-        txt_patiantName.text="Patient Name :"+requestModel.userName
-        txt_phone.text="Phone No :"+requestModel.userPhone
+        txt_name.text="Name : "+requestModel.userName
+        txt_BloodGrp.text="Blood Group : "+requestModel.userBloodGrp
+        txt_address.text="Address : "+requestModel.userLocation
+        txt_hospital.text="Request From : "+requestModel.hospital
+        txt_location.text="Location Of Hospital : "+requestModel.userLocation
+        txt_neededBloodGrp.text="Needed BloodGroup : "+requestModel.userBloodGrp
+        txt_neededUnit.text="Needed No of Unit : "+requestModel.unitNeeded
+        txt_patiantName.text="Patient Name : "+requestModel.userName
+        txt_phone.text="Phone No : "+requestModel.userPhone
 
         btn_call.setOnClickListener {
             callPaisent(requestModel.userPhone.toString())

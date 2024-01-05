@@ -53,11 +53,9 @@ class ProfileViewActivity : Fragment() {
                     val userName = documentSnapshot.getString("userName") ?: "N/A"
                     userNameTextView.text = userName
 
-                    // Since there's no dedicated TextView for each questionnaire answer, you can concatenate them
-                    // Assuming you want to display them all in a single TextView
                     val questionnaireData = buildString {
                         documentSnapshot.data?.forEach { (key, value) ->
-                            if (key != "userName") { // Assuming you don't want to repeat the user's name
+                            if (key != "userName") {
                                 append("$key: $value\n")
                             }
                         }
