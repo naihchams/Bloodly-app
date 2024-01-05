@@ -1,46 +1,71 @@
 package com.example.bloodly
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.bloodly.ui.theme.BloodlyTheme
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import com.example.bloodly.AddRequestActivity
+import com.example.bloodly.AllRequestsActivity
+import com.example.bloodly.HomeScreenActivity
+import com.example.bloodly.ProfileViewActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainScreenActivity : ComponentActivity() {
+class MainScreenActivity : AppCompatActivity() {
+
+    lateinit var toolbar: ActionBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            BloodlyTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting4("Android")
-                }
+        setContentView(R.layout.activity_main_screen)
+        //init
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.navigation)
+        val myToolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(myToolbar)
+        toolbar = supportActionBar!!
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        toolbar.title = "Home Page"
+        val homeFragment = HomeScreenActivity.newInstance()
+        openFragment(homeFragment)
+    }
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.nav_home -> {
+
+                toolbar.title = "Home Page"
+                val homeFragment = HomeScreenActivity.newInstance()
+                openFragment(homeFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.nav_request -> {
+                toolbar.title = "All Request"
+                val rquestFragment = AllRequestsActivity.newInstance()
+                openFragment(rquestFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.nav_add_request -> {
+                toolbar.title = "Add Request"
+                val addrquestFragment = AddRequestActivity.newInstance()
+                openFragment(addrquestFragment)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.nav_profile -> {
+                toolbar.title = "Profile"
+                val profileFragment = ProfileViewActivity.newInstance()
+                openFragment(profileFragment)
+                return@OnNavigationItemSelectedListener true
             }
         }
+        false
     }
-}
 
-@Composable
-fun Greeting4(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview4() {
-    BloodlyTheme {
-        Greeting4("Android")
+    private fun openFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.content1, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
+
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -11,6 +12,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.bloodly.MainScreenActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -35,19 +37,53 @@ class QuestionnaireActivity : AppCompatActivity() {
     )
     private val userAnswers = mutableListOf<String>()
 
+    private lateinit var userNameEditText: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire)
 
+        // Initialize the EditText
+        userNameEditText = EditText(this)
+        userNameEditText.hint = "Enter your name"
+
         scrollView = findViewById(R.id.scrollView)
         questionLayout = findViewById(R.id.questionLayout)
-        loadQuestion(0)
+        // Start with the user name question
+        loadUserNameQuestion()
     }
 
+    private fun loadUserNameQuestion() {
+        questionLayout.removeAllViews()
+        questionLayout.addView(userNameEditText)
+
+        val nextButton = Button(this).apply {
+            text = "Next"
+            setOnClickListener {
+                val userName = userNameEditText.text.toString().trim()
+                if (userName.isNotEmpty()) {
+                    // Save the user's name and move to the next question
+                    userAnswers.add(userName)
+                    loadQuestion(currentQuestionIndex)
+                } else {
+                    Toast.makeText(applicationContext, "Please enter your name", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        questionLayout.addView(nextButton)
+    }
 
     private fun loadQuestion(index: Int) {
         if (index >= questions.size) {
-            finishQuestionnaire()
+            // Save the user's name from the first input
+            val userName = userAnswers.firstOrNull() ?: ""
+            if (userName.isNotEmpty()) {
+                finishQuestionnaire(userName)
+            } else {
+                Toast.makeText(this, "User name is required.", Toast.LENGTH_SHORT).show()
+                // Return to the user name input
+                loadUserNameQuestion()
+            }
             return
         }
 
@@ -84,38 +120,62 @@ class QuestionnaireActivity : AppCompatActivity() {
         questionLayout.addView(nextButton)
     }
 
-    private fun finishQuestionnaire() {
-        // Get the current logged-in user
+    private fun finishQuestionnaire(userName: String) {
         val user = FirebaseAuth.getInstance().currentUser
-
-        // Check if the user is logged in
-        if (user != null) {
-            // Get a reference to the Firestore database
+        user?.let {
             val db = FirebaseFirestore.getInstance()
+            val userDocRef = db.collection("userInfo").document(it.uid)
 
-            // Prepare the answers to be saved
-            val answersMap = questions.mapIndexed { index, question ->
-                question.text to userAnswers[index]
-            }.toMap()
+            // Prepare the answers to be saved, with the userName included
+            val answersMap = userAnswersToMap(userName)
 
-            // Create a new document in the userinfo collection for the user
-            db.collection("userInfo").document(user.uid)
-                .set(answersMap)
-                .addOnSuccessListener {
-                    val intent = Intent(this, HomeScreenActivity::class.java)
-                    startActivity(intent)
-                    Toast.makeText(this, "Questionnaire data saved successfully to userinfo.", Toast.LENGTH_SHORT).show()
+            userDocRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document != null && document.exists()) {
+                        // If the document exists, update it with new data
+                        userDocRef.update(answersMap)
+                            .addOnSuccessListener {
+                                navigateToHomeScreen()
+                                showToast("Questionnaire data updated successfully.")
+                            }
+                            .addOnFailureListener { e ->
+                                showToast("Failed to update questionnaire data.")
+                            }
+                    } else {
+                        // If the document doesn't exist, create a new one
+                        userDocRef.set(answersMap)
+                            .addOnSuccessListener {
+                                navigateToHomeScreen()
+                                showToast("Questionnaire data saved successfully.")
+                            }
+                            .addOnFailureListener { e ->
+                                showToast("Failed to save questionnaire data.")
+                            }
+                    }
+                } else {
+                    showToast("Failed to check for existing questionnaire data.")
                 }
-                .addOnFailureListener {
-                    // Handle failure
-                    Toast.makeText(this, "Failed to save questionnaire data to userinfo.", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
+            }
+        } ?: showToast("User not logged in.")
+    }
+
+    private fun userAnswersToMap(userName: String): Map<String, Any> {
+        val answersMap = mutableMapOf("userName" to userName)
+        questions.mapIndexed { index, question ->
+            answersMap[question.text] = userAnswers[index]
         }
+        return answersMap
+    }
 
-        // End the Activity
+    private fun navigateToHomeScreen() {
+        val intent = Intent(this, MainScreenActivity::class.java)
+        startActivity(intent)
         finish()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 }
