@@ -48,9 +48,7 @@ class RequestAdapter(private val requestList:MutableList<Request>,val context: C
             v.setOnClickListener(this)
         }
         override fun onClick(v: View) {
-//            Log.d("RecyclerView", "CLICK!")
-//            val intent = Intent(v.context, RequestDetails::class.java)
-//            v.context.startActivity(intent)
+
         }
 
 
